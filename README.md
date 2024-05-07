@@ -8,45 +8,76 @@ To write a program to implement the the Logistic Regression Using Gradient Desce
 2. Anaconda – Python 3.7 Installation / Jupyter notebook
 
 ## Algorithm
-1. 
-2. 
-3. 
-4. 
+1. Import the necessary python packages
+2. Read the dataset
+3. Define X and Y array.
+4. Define a function for costFunction,cost and gradient.
+5. Define a function to plot the decision boundary and predict the Regression value
 
 ## Program:
 ```
 /*
 Program to implement the the Logistic Regression Using Gradient Descent.
 Developed by: POOJA.S
-RegisterNumber: 212223040146 
+RegisterNumber: 212223040146
 */
 import pandas as pd
-from sklearn.tree import DecisionTreeClassifier,plot_tree
+import numpy as np
+data=pd.read_csv("/content/Placement_Data (1).csv")
+data.head()
+data1=data.copy()
+data1.head()
+data1=data.drop(['sl_no','salary'],axis=1)
+data1
 from sklearn.preprocessing import LabelEncoder
-import matplotlib.pyplot as plt
-df=pd.read_csv('/content/Mammal_Cart.csv')
-data=df.copy()
-data.describe()
-label_encoder=LabelEncoder()
-data['Toothed']=label_encoder.fit_transform(data['Toothed'])
-data['Hair']=label_encoder.fit_transform(data['Hair'])
-data['Breathes']=label_encoder.fit_transform(data['Breathes'])
-data['Legs']=label_encoder.fit_transform(data['Legs'])
-data['Species']=label_encoder.fit_transform(data['Species'])
-x=data.drop('Species',axis=1)
-y=data['Species']
-clf=DecisionTreeClassifier(criterion="entropy")
-clf.fit(x,y)
-plt.figure(figsize=(18,6))
-plot_tree(clf,feature_names=x.columns,class_names=['Reptiles','Mammal'],filled=True)
-plt.show()
+le=LabelEncoder()
+data1["gender"]=le.fit_transform(data1["gender"])
+data1["ssc_b"]=le.fit_transform(data1["ssc_b"])
+data1["hsc_b"]=le.fit_transform(data1["hsc_b"])
+data1["hsc_s"]=le.fit_transform(data1["hsc_s"])
+data1["degree_t"]=le.fit_transform(data1["degree_t"])
+data1["workex"]=le.fit_transform(data1["workex"])
+data1["specialisation"]=le.fit_transform(data1["specialisation"])
+data1["status"]=le.fit_transform(data1["status"])
+X=data1.iloc[:,: -1]
+Y=data1["status"]
+theta=np.random.randn(X.shape[1])
+y=Y
+def sigmoid(z):
+  return 1/(1+np.exp(-z))
+def loss(theta,X,y):
+  h=sigmoid(X.dot(theta))
+  return -np.sum(y*np.log(h)+ (1-y) * np.log(1-h))
+def gradient_descent(theta,X,y,alpha,num_iterations):
+  m=len(y)
+  for i in range(num_iterations):
+    h=sigmoid(X.dot(theta))
+    gradient=X.T.dot(h-y)/m
+    theta-=alpha*gradient
+  return theta
+theta=gradient_descent(theta,X,y,alpha=0.01,num_iterations=1000)
+def predict(theta,X):
+  h=sigmoid(X.dot(theta))
+  y_pred=np.where(h>=0.5 , 1,0)
+  return y_pred
+y_pred=predict(theta,X)
+accuracy=np.mean(y_pred.flatten()==y)
+print("Accuracy:",accuracy)
+print("Predicted:\n",y_pred)
+print("Actual:\n",y.values)
+
+xnew=np.array([[0,87,0,95,0,2,78,2,0,0,1,0]])
+y_prednew=predict(theta,xnew)
+print("Predicted Result:",y_prednew)
 ```
 
-## Output:
-![Screenshot 2024-04-02 104707](https://github.com/poojasen05/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/150784373/520bbbc2-659f-41e3-9788-d86d438f0597)
 
-![Screenshot 2024-04-02 104717](https://github.com/poojasen05/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/150784373/9998f937-4ded-4282-99b7-8e1ea76e61da)
-![Screenshot 2024-04-02 104738](https://github.com/poojasen05/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/150784373/6c458d45-f663-4b7b-9208-01cf9048e55f)
+
+## Output:
+# ACCURACY,ACTUAL AND PREDICTED VALUES:
+![image](https://github.com/SanjithaBolisetti/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/119393633/dd9926fb-6803-44f0-9bed-f752061724f3)
+# PREDICTED RESULT:
+![image](https://github.com/SanjithaBolisetti/-Implementation-of-Logistic-Regression-Using-Gradient-Descent/assets/119393633/def222f2-9183-4e4c-aa3a-1fe1e1fac416)
 
 
 
